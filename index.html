@@ -1,0 +1,135 @@
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DeepLogic V9</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #121212;
+      color: #fff;
+      text-align: center;
+      padding: 20px;
+    }
+    input, button {
+      font-size: 20px;
+      padding: 10px;
+      margin: 10px;
+      border-radius: 5px;
+      border: none;
+    }
+    input {
+      width: 80%;
+      max-width: 500px;
+    }
+    button {
+      background-color: #4CAF50;
+      color: white;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    #result {
+      font-size: 24px;
+      font-weight: bold;
+      margin-top: 20px;
+      color: #00ff00;
+    }
+    #history {
+      margin-top: 30px;
+      text-align: left;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+      background-color: #1e1e1e;
+      padding: 15px;
+      border-radius: 10px;
+    }
+    #history p {
+      margin: 5px 0;
+    }
+    #cre {
+      margin-top: 30px;
+      font-style: italic;
+      color: #ccc;
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🧠 DeepLogic V9</h1>
+
+  <input type="text" id="md5Input" placeholder="Nhập mã MD5..." />
+  <br>
+  <input type="number" id="capitalInput" placeholder="Nhập số vốn của bạn..." />
+  <button onclick="suggestBet()">Gợi ý vào tiền</button>
+  <p id="suggestion" style="font-size: 18px; color: #FFD700;"></p>
+  <br>
+  <button onclick="predict()">Dự đoán</button>
+
+  <div id="result"></div>
+
+  <div id="history">
+    <h3>Lịch sử dự đoán gần nhất:</h3>
+    <div id="historyList"></div>
+  </div>
+
+  <div id="cre">Cre: Trần Quốc Trịnh - Trùm Kéo Thuê Go88</div>
+
+  <script>
+    let historyData = [];
+
+    function predict() {
+      const md5 = document.getElementById("md5Input").value.trim();
+      if (!md5) return;
+
+      const lastChar = md5.charAt(md5.length - 1).toLowerCase();
+      const xiuChars = ['0', '1', '2', '3', '4', 'a', 'b', 'c', 'd', 'e'];
+      const taiChars = ['5', '6', '7', '8', '9', 'f'];
+
+      let result = "";
+      if (xiuChars.includes(lastChar)) result = "⛅ Xỉu";
+      else if (taiChars.includes(lastChar)) result = "🌞 Tài";
+      else result = "❌ Không xác định";
+
+      document.getElementById("result").textContent = result;
+
+      if (result !== "❌ Không xác định") {
+        historyData.unshift(`MD5: ${md5} => ${result}`);
+        if (historyData.length > 10) historyData.pop();
+        renderHistory();
+      }
+
+      document.getElementById("md5Input").value = "";
+    }
+
+    function renderHistory() {
+      const historyList = document.getElementById("historyList");
+      historyList.innerHTML = "";
+      historyData.forEach(item => {
+        const p = document.createElement("p");
+        p.textContent = item;
+        historyList.appendChild(p);
+      });
+    }
+
+    function suggestBet() {
+      const capital = parseFloat(document.getElementById("capitalInput").value);
+      const suggestionEl = document.getElementById("suggestion");
+
+      if (isNaN(capital) || capital <= 0) {
+        suggestionEl.textContent = "Vui lòng nhập số vốn hợp lệ!";
+        return;
+      }
+
+      const bet = Math.floor(capital * 0.4);
+      suggestionEl.textContent = `💰 Gợi ý vào tiền: ${bet.toLocaleString()} đ (40% vốn)`;
+    }
+  </script>
+
+</body>
+</html>
